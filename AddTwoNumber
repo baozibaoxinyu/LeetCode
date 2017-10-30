@@ -1,0 +1,89 @@
+/* You are given two non-empty linked lists representing two non-negative integers. 
+The digits are stored in reverse order and each of their nodes contain a single digit.
+Add the two numbers and return it as a linked list.
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8 
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* t1;
+        ListNode* t2;
+        ListNode* pList1 = l1;
+        ListNode* pList2 = l2;  //two pointer point to ListNode;
+        int var = 0;                        //record sum;
+        int vl = 0;
+        if(l1 == NULL && l2 == NULL){
+            return l1;
+        }
+        else if(l1 == NULL && l2 != NULL){
+            return l2;
+        }
+        else if(l1 != NULL && l2 == NULL){
+            return l1;
+        }
+        else{
+            while(l1 != NULL && l2 != NULL){
+                vl = l1->val +var;
+                l1->val = (l1->val + l2->val + var)%10 ;
+                var = (vl + l2->val)/10;
+                l2->val = l1->val;
+                t1 = l1;                    //record lastnode;
+                t2 = l2;
+                l1 = l1->next;              //move to next ListNode1;
+                l2 = l2->next;              //move to next ListNode2;
+            }
+            if(l2 == NULL && l1 != NULL){
+                if((l1->val + var)/10 != 0){
+                    while(l1 != NULL){
+                        vl = l1->val;
+                        l1->val = (l1->val + var)%10;
+                        t1 = l1;
+                        var = (var+vl)/10;
+                        l1 = l1->next;
+                    }
+                    if(var > 0){
+                        ListNode* temp = new ListNode(var);
+                        t1->next = temp;
+                    }
+                }
+                else
+                    l1->val = l1 -> val + var;
+                return pList1;
+            }
+            if(l1 == NULL && l2 != NULL){
+               if((l2->val + var)/10 != 0){
+                    while(l2 != NULL){
+                        vl = l2->val;
+                        l2->val = (l2->val + var)%10;
+                        t2 = l2;
+                        var = (var+vl)/10;
+                        l2 = l2->next;
+                    }
+                    if(var > 0){
+                        ListNode* temp = new ListNode(var);
+                        t2->next = temp;
+                    }
+                }
+                else
+                    l2->val = l2->val + var;
+                return pList2;
+            }
+            if(l1 == NULL && l2 ==NULL && var > 0){
+                ListNode* temp = new ListNode(var);
+                t1->next = temp;
+                return pList1;
+            }
+        }
+        return pList1;                      //if get here,show that two ListNode have same length,and last number add < 10;
+    }
+};
